@@ -74,6 +74,27 @@ async function init() {
     isSecure: false
   };
   server.auth.strategy("google-oauth", "bell", bellAuthOptions);
+  
+  
+  
+  const officeAuthOptions = {
+    provider: "azure",
+    password: process.env.cookie_password,
+    clientId: process.env.officeclientid,
+    clientSecret: process.env.officeclientsecret,
+    config: {
+          tenant: "1161d13f-25a2-4d2e-93a2-782643d1f32f",
+    },
+    location: process.env.domain,
+    isSecure: false,
+    providerParams: {
+            response_type: "code"
+        },
+        scope: ["openid", "offline_access", "user.read"]
+  };
+  server.auth.strategy("office-oauth", "bell", officeAuthOptions);
+  
+  
 
   server.auth.default("jwt");
 

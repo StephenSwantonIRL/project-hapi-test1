@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { assert } from "chai";
 import { assertSubset } from "../test-utils.js";
-import { placeMarkService } from "./placemark-service.js";
+import { placeMarkService } from "./backend-service.js";
 import { maggie, testUsers, maggieCredentials } from "../fixtures.js";
 import { db } from "../../src/models/db.js";
 

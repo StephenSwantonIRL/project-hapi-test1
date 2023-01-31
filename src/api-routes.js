@@ -10,7 +10,7 @@ export const apiRoutes = [
 
   { method: "POST", path: "/api/revokeToken", config: userApi.revokeToken },
   { method: ["GET", "POST","DELETE"], path: "/api/checkToken", config: userApi.checkToken },
-  { method: "GET", path: "/google", config: userApi.googleAuth },
-  { method: ["GET", "POST"], path: "/auth", config: userApi.googleAuth },
+  { method: ["GET", "POST"], path: "/google", config: userApi.googleAuth },
+  { method: ["GET", "POST"], path: "/auth", config: userApi.officeAuth },
 
 ];

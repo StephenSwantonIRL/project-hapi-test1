@@ -1,9 +1,19 @@
 import Boom from "@hapi/boom";
 import bcrypt from "bcrypt";
 import Joi from "joi";
+import  nodemailer from "nodemailer"
 import { createToken } from "./jwt-utils.js";
 import { db } from "../src/models/db.js";
-import { UserArray, UserSpec, UserCredentialsSpec, UserSpecPlus, IdSpec, JwtAuth } from "../src/models/joi-schemas.js";
+
+
+import {
+  UserArray,
+  UserSpec,
+  UserCredentialsSpec,
+  UserSpecPlus,
+  IdSpec,
+  JwtAuth,
+} from "../src/models/joi-schemas.js";
 import { validationError } from "./logger.js";
 import { tokenMongoStore } from "../src/models/mongo/token-mongo-store.js";
 
@@ -14,7 +24,7 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const users = await db.userStore.getAllUsers();
         return users;
@@ -32,7 +42,7 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const user = await db.userStore.getUserById(request.params.id);
         if (!user) {
@@ -54,7 +64,7 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const user = await db.userStore.getUserByEmail(request.payload.email);
         if (!user) {
@@ -68,23 +78,76 @@ export const userApi = {
     tags: ["api"],
     description: "Get a User by Email",
     notes: "Returns details of a single user identified by their Email",
-    validate: { payload: Joi.object().keys({ email: Joi.string().email() }), failAction: validationError },
+    validate: {
+      payload: Joi.object().keys({ email: Joi.string().email() }),
+      failAction: validationError,
+    },
     response: { schema: UserSpecPlus, failAction: validationError },
   },
 
   create: {
     auth: false,
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const userDetails = request.payload;
-        userDetails.password = await bcrypt.hash(userDetails.password, saltRounds);
+        userDetails.password = await bcrypt.hash(
+          userDetails.password,
+          saltRounds
+        );
         const user = await db.userStore.addUser(userDetails);
+
+        
+        
         if (user) {
+
+          const transporter = nodemailer.createTransport( {
+            host: "remem.pro",
+            port: 465,
+            secure: true, // upgrade later with STARTTLS
+            auth: {
+              user: process.env.systememail,
+              pass: process.env.systememailpw,
+            },
+
+          })
+
+          transporter.verify(function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Server is ready to take our messages");
+            }
+          });
+
+          const info = await transporter.sendMail({
+            from: "Inquis.it <diversity@remem.pro>",
+            to: user.email,
+            subject: "Hello You've been invited to join Inquis.it", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<h2 style=\"text-align: center;\">Hello there!👋</h2>\n" +
+                "<p style=\"text-align: center;\">You signed up to join inquis.it.&nbsp;</p>\n" +
+                "<p style=\"text-align: center;\">Click below to complete your sign up and gain access.</p>\n" +
+                "<div>\n" +
+                "<table style=\"margin-left: auto; margin-right: auto;\" width=\"30%\">\n" +
+                "<tbody>\n" +
+                "<tr>\n" +
+                "<td style=\"text-align: center; background-color: #ed7d31; color: white;\">\n" +
+                `<a href="${process.env.frontEndDomain}/invite/${user._id}/"><h3><strong>Join Now</strong></h3></a>\n` +
+                "</td>\n" +
+                "</tr>\n" +
+                "</tbody>\n" +
+                "</table>\n" +
+                "</div>", // html body
+          })
+
+          console.log("Message sent: %s", info.messageId);
+
+
           return h.response(user).code(201);
         }
         return Boom.badImplementation("error creating user");
       } catch (err) {
-        return Boom.serverUnavailable("Database Error");
+        return Boom.serverUnavailable(err);
       }
     },
     tags: ["api"],
@@ -96,7 +159,7 @@ export const userApi = {
 
   deleteAll: {
     auth: false,
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         await db.userStore.deleteAll();
         return h.response().code(204);
@@ -111,11 +174,14 @@ export const userApi = {
 
   authenticate: {
     auth: false,
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const user = await db.userStore.getUserByEmail(request.payload.email);
         if (user) {
-          const passwordsMatch = await bcrypt.compare(request.payload.password, user.password);
+          const passwordsMatch = await bcrypt.compare(
+            request.payload.password,
+            user.password
+          );
           if (passwordsMatch) {
             const token = createToken(user);
             return h.response({ success: true, token: token }).code(201);
@@ -123,7 +189,6 @@ export const userApi = {
           return Boom.unauthorized("Invalid password");
         }
         return Boom.unauthorized("User not found");
-
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
@@ -139,8 +204,10 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function(request, h) {
-      const response = await tokenMongoStore.addRevokedToken({ token: request.auth.artifacts.token });
+    handler: async function (request, h) {
+      const response = await tokenMongoStore.addRevokedToken({
+        token: request.auth.artifacts.token,
+      });
       if (response) {
         return h.response(response).code(201);
       }
@@ -152,7 +219,7 @@ export const userApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       return h.response("ok").code(200);
     },
   },
@@ -161,28 +228,79 @@ export const userApi = {
     auth: {
       strategy: "google-oauth",
     },
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       if (!request.auth.isAuthenticated) {
         return `Authentication failed due to: ${request.auth.error.message}`;
       }
       if (request.auth.isAuthenticated) {
-        const user = await db.userStore.getUserByGitHub(request.auth.credentials.profile.username);
+        const user = await db.userStore.getUserByGitHub(
+          request.auth.credentials.profile.email
+        );
         if (!user) {
-          const [firstname, ...lastname] = (request.auth.credentials.profile.displayName).split(" ");
+          const [firstname, ...lastname] =
+            request.auth.credentials.profile.displayName.split(" ");
           const gitHubUser = {
             firstName: firstname,
             lastName: lastname.join(" "),
             email: request.auth.credentials.profile.email,
-            gitHub: request.auth.credentials.profile.username,
+            gitHub: request.auth.credentials.profile.email,
           };
-          const string = new Buffer(JSON.stringify(gitHubUser)).toString("base64")
-          const convertedString = new Buffer(string, "base64").toString("ascii")
-          return h.redirect(`${process.env.frontEndDomain}/#/github/${ string}`)
+          const newUser = await db.userStore.addUser(gitHubUser);
+          const string = new Buffer(JSON.stringify(gitHubUser)).toString(
+            "base64"
+          );
+          const convertedString = new Buffer(string, "base64").toString(
+            "ascii"
+          );
+          return h.redirect(`${process.env.frontEndDomain}/#/github/${string}`);
         }
         const token = createToken(user);
-        return h.redirect(`${process.env.frontEndDomain}/#/auth/${user._id}/${token}`);
+        return h.redirect(
+          `${process.env.frontEndDomain}/#/auth/${user._id}/${token}`
+        );
       }
     },
   },
-  
+
+  officeAuth: {
+    auth: {
+      strategy: "office-oauth",
+      mode: "try",
+    },
+    handler: async function (request, h) {
+      if (!request.auth.isAuthenticated) {
+        return `Authentication failed due to: ${request.auth.error.message}`;
+      }
+      if (request.auth.isAuthenticated) {
+        console.log("Successful authentication");
+
+        //return JSON.stringify(request.auth.credentials.profile)
+        const user = await db.userStore.getUserByGitHub(
+          request.auth.credentials.profile.email
+        );
+        if (!user) {
+          const [firstname, ...lastname] =
+            request.auth.credentials.profile.displayName.split(" ");
+          const gitHubUser = {
+            firstName: firstname,
+            lastName: lastname.join(" "),
+            email: request.auth.credentials.profile.email,
+            gitHub: request.auth.credentials.profile.email,
+          };
+          const newUser = await db.userStore.addUser(gitHubUser);
+          const string = new Buffer(JSON.stringify(gitHubUser)).toString(
+            "base64"
+          );
+          const convertedString = new Buffer(string, "base64").toString(
+            "ascii"
+          );
+          return h.redirect(`${process.env.frontEndDomain}/#/github/${string}`);
+        }
+        const token = createToken(user);
+        return h.redirect(
+          `${process.env.frontEndDomain}/#/auth/${user._id}/${token}`
+        );
+      }
+    },
+  },
 };
