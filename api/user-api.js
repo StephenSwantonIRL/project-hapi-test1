@@ -96,7 +96,7 @@ export const userApi = {
         );
         const user = await db.userStore.addUser(userDetails);
 
-        
+        console.log(user)
         
         if (user) {
 
@@ -120,13 +120,13 @@ export const userApi = {
           });
 
           const info = await transporter.sendMail({
-            from: "Inquis.it <diversity@remem.pro>",
+            from: `Inquis.it <${process.env.systememail}`,
             to: user.email,
             subject: "Hello You've been invited to join Inquis.it", // Subject line
             text: "Hello world?", // plain text body
             html: "<h2 style=\"text-align: center;\">Hello there!👋</h2>\n" +
                 "<p style=\"text-align: center;\">You signed up to join inquis.it.&nbsp;</p>\n" +
-                "<p style=\"text-align: center;\">Click below to complete your sign up and gain access.</p>\n" +
+                "<p style=\"text-align: center;\">Click below to complete your sign-up and gain access.</p>\n" +
                 "<div>\n" +
                 "<table style=\"margin-left: auto; margin-right: auto;\" width=\"30%\">\n" +
                 "<tbody>\n" +
@@ -154,7 +154,7 @@ export const userApi = {
     description: "Create a new User",
     notes: "Adds a new user to the database.",
     validate: { payload: UserSpec, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    // response: { schema: UserSpecPlus, failAction: validationError },
   },
 
   deleteAll: {

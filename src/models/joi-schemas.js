@@ -7,11 +7,10 @@ export const UserCredentialsSpec = {
 
 export const UserSpec = Joi.object()
   .keys({
-    firstName: Joi.string().min(2).pattern(new RegExp("^[a-zA-Z\u00C0-\u00FF- ]*$")).example("Homer").required(),
-    lastName: Joi.string().min(2).pattern(new RegExp("^[a-zA-Z'\u00C0-\u00FF- ]*$")).example("Simpson").required(),
-    email: Joi.string().email().example("homer@simpson.com").required(),
+    firstname: Joi.string().min(2).pattern(new RegExp("^[a-zA-Z\u00C0-\u00FF- ]*$")).example("Homer").required(),
+    lastname: Joi.string().min(2).pattern(new RegExp("^[a-zA-Z'\u00C0-\u00FF- ]*$")).example("Simpson").required(),
+    email: Joi.string().email().example("stephenswanton@gmail.com").required(),
     password: Joi.string().min(6).example("yourSecretPassword").required(),
-    gitHub: Joi.string().example("Username1234").optional()
   })
   .label("UserDetails");
 
@@ -19,7 +18,7 @@ export const IdSpec = Joi.alternatives().try(Joi.string(), Joi.object()).descrip
 
 
 export const UserSpecPlus = UserSpec.keys({
-  isAdmin: Joi.boolean(),
+    userid: IdSpec,
   _id: IdSpec,
   __v: Joi.number(),
 }).label("UserDetailsPlus");

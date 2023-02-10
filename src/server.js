@@ -98,7 +98,7 @@ async function init() {
 
   server.auth.default("jwt");
 
-  db.init("mongo");
+  db.init("postgres");
   server.route(apiRoutes);
   await server.start();
   console.log("Server running on %s", server.info.uri);
