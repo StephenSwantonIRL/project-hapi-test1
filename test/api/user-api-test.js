@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { assert } from "chai";
 import { assertSubset } from "../test-utils.js";
-import { placeMarkService } from "./backend-service.js";
+import { backEndService } from "./backend-service.js";
 import { maggie, testUsers, maggieCredentials } from "../fixtures.js";
 import { db } from "../../src/models/db.js";
 
@@ -9,79 +9,79 @@ const users = new Array(testUsers.length);
 
 suite("User API tests", () => {
   setup(async () => {
-    db.init("mongo");
-    await placeMarkService.deleteAllUsers();
-    await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    await placeMarkService.deleteAllUsers();
+    db.init("postgres");
+    await backEndService.deleteAllUsers();
+    await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    await backEndService.deleteAllUsers();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      users[i] = await placeMarkService.createUser(testUsers[i]);
+      users[i] = await backEndService.createUser(testUsers[i]);
     }
-    await placeMarkService.clearAuth();
+    await backEndService.clearAuth();
   });
 
   test("create a user", async () => {
-    const newUser = await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
+    const newUser = await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
     assertSubset(maggie, newUser);
     assert.isDefined(newUser._id);
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 
   test("delete all userApi", async () => {
-    const newUser = await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    let returnedUsers = await placeMarkService.getAllUsers();
+    const newUser = await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    let returnedUsers = await backEndService.getAllUsers();
     assert.equal(returnedUsers.length, 4);
-    await placeMarkService.deleteAllUsers();
-    await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    returnedUsers = await placeMarkService.getAllUsers();
+    await backEndService.deleteAllUsers();
+    await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    returnedUsers = await backEndService.getAllUsers();
     assert.equal(returnedUsers.length, 1);
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 
   test("get a user", async () => {
-    const newUser = await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    const returnedUser = await placeMarkService.getUser(users[0]._id);
+    const newUser = await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    const returnedUser = await backEndService.getUser(users[0]._id);
     assert.deepEqual(users[0], returnedUser);
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 
   test("get a user by email", async () => {
-    const newUser = await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    const returnedUser = await placeMarkService.getUserByEmail(users[0].email);
+    const newUser = await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    const returnedUser = await backEndService.getUserByEmail(users[0].email);
     assert.deepEqual(users[0], returnedUser);
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 
   test("get a user - bad id", async () => {
     try {
-      const newUser = await placeMarkService.createUser(maggie);
-      await placeMarkService.authenticate(maggieCredentials);
-      const returnedUser = await placeMarkService.getUser("1234");
+      const newUser = await backEndService.createUser(maggie);
+      await backEndService.authenticate(maggieCredentials);
+      const returnedUser = await backEndService.getUser("1234");
       assert.fail("Should not return a response");
     } catch (error) {
       assert(error.response.data.message === "No User with this id");
     }
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 
   test("get a user - deleted user", async () => {
-    const newUser = await placeMarkService.createUser(maggie);
-    await placeMarkService.authenticate(maggieCredentials);
-    await placeMarkService.deleteAllUsers();
+    const newUser = await backEndService.createUser(maggie);
+    await backEndService.authenticate(maggieCredentials);
+    await backEndService.deleteAllUsers();
     try {
-      await placeMarkService.createUser(maggie);
-      await placeMarkService.authenticate(maggieCredentials);
-      const returnedUser = await placeMarkService.getUser(testUsers[0]._id);
+      await backEndService.createUser(maggie);
+      await backEndService.authenticate(maggieCredentials);
+      const returnedUser = await backEndService.getUser(testUsers[0]._id);
       assert.fail("Should not return a response");
     } catch (error) {
       assert(error.response.data.message === "No User with this id");
     }
-    await placeMarkService.deleteAllUsers();
+    await backEndService.deleteAllUsers();
   });
 });

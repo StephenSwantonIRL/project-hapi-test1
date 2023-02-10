@@ -131,3 +131,9 @@ dist
 /src/models/mem/
 /src/views/
 /src/models/json/
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/modules.xml
+.idea/project-hapi.iml
+.idea/vcs.xml

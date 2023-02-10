@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 suite("User Model tests", () => {
   setup(async () => {
-    db.init("fire");
+    db.init("postgres");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -52,14 +52,14 @@ suite("User Model tests", () => {
 
   test("get a user - success", async () => {
     const user = await db.userStore.addUser(maggie);
-    const returnedUser1 = await db.userStore.getUserById(user._id);
+    const returnedUser1 = await db.userStore.getUserById(user.userid);
     assert.deepEqual(user, returnedUser1);
     const returnedUser2 = await db.userStore.getUserByEmail(user.email);
     assert.deepEqual(user, returnedUser2);
   });
 
   test("delete One User - success", async () => {
-    await db.userStore.deleteUserById(testUsers[0]._id);
+    await db.userStore.deleteUserById(testUsers[0].userid);
     const returnedUsers = await db.userStore.getAllUsers();
     assert.equal(returnedUsers.length, testUsers.length - 1);
     const deletedUser = await db.userStore.getUserById(testUsers[0]._id);
@@ -76,13 +76,13 @@ suite("User Model tests", () => {
 
   test("update a user - success", async () => {
     const user = await db.userStore.addUser(maggie);
-    maggie._id = user._id;
+    maggie.userid = user.userid;
     assertSubset(maggie, user);
     const updatedUser = updatedMaggie;
-    updatedUser._id = user._id;
-    updatedUser.isAdmin = false;
-    await db.userStore.updateUser(user._id, updatedUser);
-    const finalUser = await db.userStore.getUserById(user._id);
+    updatedUser.userid = user.userid;
+    updatedUser.isadmin = false;
+    await db.userStore.updateUser(user.userid, updatedUser);
+    const finalUser = await db.userStore.getUserById(user.userid);
     assertSubset(updatedUser, finalUser);
   });
 
@@ -90,19 +90,19 @@ suite("User Model tests", () => {
     const user = await db.userStore.addUser(maggie);
     const updatedUser = updatedMaggie;
     updatedUser.email = "bart@simpson2.com";
-    updatedUser._id = user._id;
+    updatedUser.userid = user.userid;
     updatedUser.isAdmin = false;
-    const outcome = await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
+    const outcome = await expect(db.userStore.updateUser(user.userid, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
     console.log(outcome);
   });
 
   test("check if administrator", async () => {
     const newAdmin = await db.userStore.addUser(maggie);
-    const outcome = await db.userStore.makeAdmin(newAdmin._id);
-    const adminStatus = await db.userStore.checkAdmin(newAdmin._id);
+    const outcome = await db.userStore.makeAdmin(newAdmin.userid);
+    const adminStatus = await db.userStore.checkAdmin(newAdmin.userid);
     assert.equal(adminStatus, true);
-    await db.userStore.revokeAdmin(newAdmin._id);
-    const revokedStatus = await db.userStore.checkAdmin(newAdmin._id);
+    await db.userStore.revokeAdmin(newAdmin.userid);
+    const revokedStatus = await db.userStore.checkAdmin(newAdmin.userid);
     assert.equal(revokedStatus, false);
   });
 });

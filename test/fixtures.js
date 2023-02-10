@@ -1,8 +1,8 @@
 export const serviceUrl = "http://localhost:4000";
 
 export const maggie =   {
-  firstName: "Maggie",
-  lastName: "Simpson",
+  firstname: "Maggie",
+  lastname: "Simpson",
   email: "maggie@simpson.com",
   password: "secret",
 }
@@ -13,21 +13,21 @@ export const maggieCredentials =   {
 }
 
 export const updatedMaggie =   {
-  firstName: "Maggie",
-  lastName: "Simpson",
+  firstname: "Maggie",
+  lastname: "Simpson",
   email: "maggie@simpson.com",
   password: "updatedSecret",
 }
 
 export const suzie = {
-  firstName: "Suzie",
+  firstname: "Suzie",
   email: "suzie@simpson.com",
   password: "secret"
 };
 
 export const stephen = {
-  firstName: "Stephen",
-  lastName: "Swanton",
+  firstname: "Stephen",
+  lastname: "Swanton",
   email: "stephenswanton@gmail.com",
   password: "secret"
 };
@@ -35,20 +35,20 @@ export const stephen = {
 
 export const testUsers = [
   {
-    firstName: "Homer",
-    lastName: "Simpson",
+    firstname: "Homer",
+    lastname: "Simpson",
     email: "homer@simpson.com",
     password: "secret"
   },
   {
-    firstName: "Marge",
-    lastName: "Simpson",
+    firstname: "Marge",
+    lastname: "Simpson",
     email: "marge@simpson.com",
     password: "secret"
   },
   {
-    firstName: "Bart",
-    lastName: "Simpson",
+    firstname: "Bart",
+    lastname: "Simpson",
     email: "bart@simpson2.com",
     password: "secret"
   }

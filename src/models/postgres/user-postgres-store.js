@@ -5,7 +5,7 @@ import { sql } from "./connect.js"
 export const userPostgresStore = {
   async getAllUsers() {
     const users = await sql` select * from users`
-    return users[0] ? users : null;
+    return users;
   },
 
   async getUserById(id) {
@@ -68,8 +68,9 @@ export const userPostgresStore = {
     const user = await this.getUserById(userId);
     const emailCheck = await this.getUserByEmail(updatedUser.email);
     if (user !== null && (emailCheck === null || user.email === updatedUser.email)) {
-     // update query
-      return null
+      await  sql`update users set ${sql(updatedUser)} where userid = ${userId} `
+      const confirmUpdate = await this.getUserById(userId)
+      return confirmUpdate
     }
     if (emailCheck !== null) {
       return Promise.reject(Error("Another user is already using that email address"));
@@ -81,25 +82,25 @@ export const userPostgresStore = {
   async checkAdmin(id) {
     if (id) {
       const user = await sql` select * from users where userId = ${id}`
-      return user[0] ? user.isAdmin : false;
+      return user[0] ? user.isadmin : false;
     }
     return null;
   },
 
   async makeAdmin(id) {
     if (id) {
-      // update isAdmin query
-      // const outcome = await this.getUserById(id)
-      // return outcome.isAdmin
+      await  sql`update users set isadmin = true where userid = ${id} `
+      const confirmUpdate = await this.getUserById(id)
+      return confirmUpdate.isadmin
     }
     return Promise.reject(Error("User does not exist"));
   },
 
   async revokeAdmin(id) {
     if (id) {
-      // update isAdmin query
-      // const outcome = await this.getUserById(id)
-      // return outcome.isAdmin
+      await  sql`update users set isadmin = true where userid = ${id} `
+      const confirmUpdate = await this.getUserById(id)
+      return confirmUpdate.isadmin
     }
     return Promise.reject(Error("User does not exist"));
   },
