@@ -15,7 +15,7 @@ import {
   JwtAuth,
 } from "../src/models/joi-schemas.js";
 import { validationError } from "./logger.js";
-import { tokenMongoStore } from "../src/models/mongo/token-mongo-store.js";
+import { tokenPostgresStore } from "../src/models/postgres/token-postgres-store.js";
 
 const saltRounds = 10;
 
@@ -56,8 +56,8 @@ export const userApi = {
     tags: ["api"],
     description: "Get a User by ID",
     notes: "Returns details of a single user identified by their ID number",
-    validate: { params: { id: IdSpec }, failAction: validationError },
-    response: { schema: UserSpecPlus, failAction: validationError },
+    // validate: { params: { id: IdSpec }, failAction: validationError },
+    // response: { schema: UserSpecPlus, failAction: validationError },
   },
 
   findOneByEmail: {
@@ -83,7 +83,7 @@ export const userApi = {
       payload: Joi.object().keys({ email: Joi.string() }),
       failAction: validationError,
     }, */
-    response: { schema: UserSpecPlus, failAction: validationError },
+    // response: { schema: UserSpecPlus, failAction: validationError },
   },
 
   create: {
@@ -206,8 +206,8 @@ export const userApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const response = await tokenMongoStore.addRevokedToken({
-        token: request.auth.artifacts.token,
+      const response = await tokenPostgresStore.addRevokedToken({
+        token: request.payload.token,
       });
       if (response) {
         return h.response(response).code(201);

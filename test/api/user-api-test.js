@@ -25,10 +25,9 @@ suite("User API tests", () => {
     const newUser = await backEndService.createUser(maggie);
     await backEndService.authenticate(maggieCredentials);
     assertSubset(maggie, newUser);
-    assert.isDefined(newUser._id);
+    assert.isDefined(newUser.userid);
     await backEndService.deleteAllUsers();
   });
-
   test("delete all userApi", async () => {
     const newUser = await backEndService.createUser(maggie);
     await backEndService.authenticate(maggieCredentials);
@@ -45,7 +44,7 @@ suite("User API tests", () => {
   test("get a user", async () => {
     const newUser = await backEndService.createUser(maggie);
     await backEndService.authenticate(maggieCredentials);
-    const returnedUser = await backEndService.getUser(users[0]._id);
+    const returnedUser = await backEndService.getUser(users[0].userid);
     assert.deepEqual(users[0], returnedUser);
     await backEndService.deleteAllUsers();
   });
