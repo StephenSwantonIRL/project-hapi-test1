@@ -76,7 +76,7 @@ suite("User API tests", () => {
     try {
       await backEndService.createUser(maggie);
       await backEndService.authenticate(maggieCredentials);
-      const returnedUser = await backEndService.getUser(testUsers[0]._id);
+      const returnedUser = await backEndService.getUser(testUsers[0].userid);
       assert.fail("Should not return a response");
     } catch (error) {
       assert(error.response.data.message === "No User with this id");

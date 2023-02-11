@@ -2,9 +2,9 @@ import Boom from "@hapi/boom";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 import  nodemailer from "nodemailer"
+import { Crypto } from "cryptojs"
 import { createToken } from "./jwt-utils.js";
 import { db } from "../src/models/db.js";
-
 
 import {
   UserArray,
@@ -100,7 +100,8 @@ export const userApi = {
         console.log(user)
         
         if (user) {
-
+          const key = Crypto.MD5(user.userid.toString()).toString()
+          console.log(key)
           const transporter = nodemailer.createTransport( {
             host: "remem.pro",
             port: 465,
@@ -133,7 +134,7 @@ export const userApi = {
                 "<tbody>\n" +
                 "<tr>\n" +
                 "<td style=\"text-align: center; background-color: #ed7d31; color: white;\">\n" +
-                `<a href="${process.env.frontEndDomain}/invite/${user._id}/"><h3><strong>Join Now</strong></h3></a>\n` +
+                `<a href="${process.env.frontEndDomain}/#/invite/${user.userid}/${key}/"><h3><strong>Join Now</strong></h3></a>\n` +
                 "</td>\n" +
                 "</tr>\n" +
                 "</tbody>\n" +
@@ -222,6 +223,24 @@ export const userApi = {
     },
     handler: async function (request, h) {
       return h.response("ok").code(200);
+    },
+  },
+
+  checkInvite: {
+    auth: false,
+    handler: async function (request, h) {
+      const user = request.params.id;
+      const keyAssigned = Crypto.MD5(user).toString()
+      const keyPresented = request.params.key;
+      // if user exists && presents correct key render the form
+      const currentUser = await db.userStore.getUserById(user)
+      if (currentUser && keyAssigned === keyPresented) {
+        const verified = await db.userStore.verifyEmail(currentUser.userid)
+        return h.response(verified).code(201);
+      } else {
+        const verified = false
+        return h.response(verified).code(400);
+      }
     },
   },
 

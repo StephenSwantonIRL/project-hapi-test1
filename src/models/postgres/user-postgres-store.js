@@ -10,7 +10,7 @@ export const userPostgresStore = {
 
   async getUserById(id) {
     if (id) {
-      const user = await sql` select * from users where userId = ${id}`
+      const user = await sql` select * from users where userid = ${id}`
       return user[0];
     }
     return null;
@@ -35,7 +35,7 @@ export const userPostgresStore = {
       return confirmAdded
 
     }
-      return new Error("User Already Exists");
+    return new Error("User Already Exists");
 
   },
 
@@ -76,7 +76,7 @@ export const userPostgresStore = {
       return Promise.reject(Error("Another user is already using that email address"));
     }
 
-      return Promise.reject(Error("User does not exist"));
+    return Promise.reject(Error("User does not exist"));
   },
 
   async checkAdmin(id) {
@@ -94,6 +94,13 @@ export const userPostgresStore = {
       return confirmUpdate.isadmin
     }
     return Promise.reject(Error("User does not exist"));
+  },
+
+  async verifyEmail(id) {
+    console.log(typeof(id))
+    const operation = await  sql`UPDATE users SET verified = true where userid= ${id} RETURNING * `;
+    const confirmUpdate = await this.getUserById(id)
+    return confirmUpdate.verified
   },
 
   async revokeAdmin(id) {

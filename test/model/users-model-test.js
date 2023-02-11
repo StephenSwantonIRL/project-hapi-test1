@@ -105,4 +105,5 @@ suite("User Model tests", () => {
     const revokedStatus = await db.userStore.checkAdmin(newAdmin.userid);
     assert.equal(revokedStatus, false);
   });
+
 });

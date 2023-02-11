@@ -137,3 +137,5 @@ dist
 .idea/modules.xml
 .idea/project-hapi.iml
 .idea/vcs.xml
+*.xml
+.idea/project-hapi.iml
