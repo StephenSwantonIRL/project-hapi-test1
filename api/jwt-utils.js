@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { db } from "../src/models/db.js";
-import { tokenMongoStore } from "../src/models/mongo/token-mongo-store.js";
+import { tokenPostgresStore } from "../src/models/postgres/token-postgres-store.js";
 
 const result = dotenv.config();
 
 export function createToken(user) {
   const payload = {
-    id: user._id,
+    id: user.userid,
     email: user.email,
   };
   const options = {
@@ -21,7 +21,7 @@ export function decodeToken(token) {
   const userInfo = {};
   try {
     const decoded = jwt.verify(token, process.env.cookie_password);
-    userInfo.userId = decoded.id;
+    userInfo.userid = decoded.id;
     userInfo.email = decoded.email;
   } catch (e) {
     console.log(e.message);
@@ -30,7 +30,7 @@ export function decodeToken(token) {
 }
 
 export async function validate(decoded, request) {
-  const token = await tokenMongoStore.checkToken(request.auth.token);
+  const token = await tokenPostgresStore.checkToken(request.auth.token);
   if (token !== "ok") {
     return { isValid: false };
   }

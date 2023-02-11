@@ -3,6 +3,9 @@ import { backEndService } from "./backend-service.js";
 import { decodeToken } from "../../api/jwt-utils.js";
 import { maggie, maggieCredentials } from "../fixtures.js";
 
+
+
+
 suite("Authentication API tests", async () => {
   setup(async () => {
     backEndService.clearAuth();
@@ -23,7 +26,7 @@ suite("Authentication API tests", async () => {
 
     const userInfo = decodeToken(response.token);
     assert.equal(userInfo.email, returnedUser.email);
-    assert.equal(userInfo.userId, returnedUser._id);
+    assert.equal(userInfo.userid, returnedUser.userid);
     await backEndService.deleteAllUsers();
   });
 

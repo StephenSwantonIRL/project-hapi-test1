@@ -66,6 +66,7 @@ export const userApi = {
     },
     handler: async function (request, h) {
       try {
+        console.log(request.payload)
         const user = await db.userStore.getUserByEmail(request.payload.email);
         if (!user) {
           return Boom.notFound("No User with this email");
@@ -78,10 +79,10 @@ export const userApi = {
     tags: ["api"],
     description: "Get a User by Email",
     notes: "Returns details of a single user identified by their Email",
-    validate: {
-      payload: Joi.object().keys({ email: Joi.string().email() }),
+/*     validate: {
+      payload: Joi.object().keys({ email: Joi.string() }),
       failAction: validationError,
-    },
+    }, */
     response: { schema: UserSpecPlus, failAction: validationError },
   },
 
