@@ -159,6 +159,74 @@ export const userApi = {
     // response: { schema: UserSpecPlus, failAction: validationError },
   },
 
+
+  forgotPassword: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const userToReset = request.payload.email;
+        const user = await db.userStore.getUserByEmail(userToReset);
+
+        if (user) {
+          const key = Crypto.MD5(user.userid.toString()).toString()
+          const transporter = nodemailer.createTransport( {
+            host: "remem.pro",
+            port: 465,
+            secure: true, // upgrade later with STARTTLS
+            auth: {
+              user: process.env.systememail,
+              pass: process.env.systememailpw,
+            },
+
+          })
+
+          transporter.verify(function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Server is ready to take our messages");
+            }
+          });
+
+          const info = await transporter.sendMail({
+            from: `Inquis.it <${process.env.systememail}`,
+            to: user.email,
+            subject: "Inquis.it Password Reset", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<h2 style=\"text-align: center;\">Hello there!👋</h2>\n" +
+                "<p style=\"text-align: center;\"> We heard you lost your password for inquis.it.&nbsp;</p>\n" +
+                "<p style=\"text-align: center;\">Click below to reset it. If you didn't request this you can ignore this email.</p>\n" +
+                "<div>\n" +
+                "<table style=\"margin-left: auto; margin-right: auto;\" width=\"30%\">\n" +
+                "<tbody>\n" +
+                "<tr>\n" +
+                "<td style=\"text-align: center; background-color: #ed7d31; color: white;\">\n" +
+                `<a href="${process.env.frontEndDomain}/#/reset/${user.userid}/${key}/"><h3><strong>Reset Password</strong></h3></a>\n` +
+                "</td>\n" +
+                "</tr>\n" +
+                "</tbody>\n" +
+                "</table>\n" +
+                "</div>", // html body
+          })
+
+          console.log("Message sent: %s", info.messageId);
+
+
+          return h.response(true).code(201);
+        }
+        return Boom.badImplementation("error creating user");
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+    tags: ["api"],
+    description: "Forgot Password",
+    notes: "Sends an email to a user with a password reset link",
+    // validate: { payload: UserSpec, failAction: validationError },
+    // response: { schema: UserSpecPlus, failAction: validationError },
+  },
+
+
   deleteAll: {
     auth: false,
     handler: async function (request, h) {
@@ -243,6 +311,46 @@ export const userApi = {
       }
     },
   },
+
+  verifyLink: {
+    auth: false,
+    handler: async function (request, h) {
+      const user = request.params.id;
+      const keyAssigned = Crypto.MD5(user).toString()
+      const keyPresented = request.params.key;
+      const currentUser = await db.userStore.getUserById(user)
+      if (currentUser && keyAssigned === keyPresented) {
+        return h.response(true).code(201);
+      } else {
+        return h.response(false).code(400);
+      }
+    },
+  },
+
+  resetPassword: {
+    auth:false,
+    handler: async function (request, h) {
+      const user = request.params.id;
+      const keyAssigned = Crypto.MD5(user).toString()
+      const keyPresented = request.params.key;
+      // if user exists && presents correct key render the form
+      const currentUser = await db.userStore.getUserById(user)
+      if (currentUser && keyAssigned === keyPresented) {
+        const newPassword = request.payload.password;
+        const hashedPassword = await bcrypt.hash(
+            newPassword,
+            saltRounds
+        );
+        const operation = await db.userStore.updatePassword(currentUser.userid, hashedPassword)
+        console.log("password operation complete")
+        return h.response(operation).code(201);
+      } else {
+        const verified = false
+        return h.response(verified).code(400);
+      }
+    },
+  },
+
 
   googleAuth: {
     auth: {

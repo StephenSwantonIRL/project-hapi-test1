@@ -1,5 +1,6 @@
 import axios from "axios";
 import { serviceUrl } from "../fixtures.js";
+import {sessionApi} from "../../api/session-api.js";
 
 export const backEndService = {
   backEndUrl: serviceUrl,
@@ -40,4 +41,31 @@ export const backEndService = {
     // eslint-disable-next-line dot-notation
     axios.defaults.headers.common["Authorization"] = "";
   },
+
+  async deleteAllSessions() {
+    const res = await axios.delete(`${this.backEndUrl}/api/sessions`);
+    return res.data;
+  },
+
+  async getAllSessions() {
+    const res = await axios.get(`${this.backEndUrl}/api/sessions`);
+    return res.data;
+  },
+
+  async createSession(session) {
+    const res = await axios.post(`${this.backEndUrl}/api/sessions`, session);
+    return res.data;
+  },
+
+  async getSessionById(id) {
+    const res = await axios.get(`${this.backEndUrl}/api/sessions/${id}`);
+    return res.data;
+  },
+
+  async deleteSessionById(id) {
+    console.log(id)
+    const res = await axios.delete(`${this.backEndUrl}/api/sessions/${id}`);
+    return res.data;
+  },
+
 };

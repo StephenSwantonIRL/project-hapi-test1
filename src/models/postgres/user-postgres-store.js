@@ -97,10 +97,15 @@ export const userPostgresStore = {
   },
 
   async verifyEmail(id) {
-    console.log(typeof(id))
     const operation = await  sql`UPDATE users SET verified = true where userid= ${id} RETURNING * `;
     const confirmUpdate = await this.getUserById(id)
     return confirmUpdate.verified
+  },
+
+  async updatePassword(id, hashedPassword) {
+    const operation = await  sql`UPDATE users SET password = ${hashedPassword} where userid= ${id} RETURNING * `;
+    const confirmUpdate = await this.getUserById(id)
+    return confirmUpdate.password === hashedPassword
   },
 
   async revokeAdmin(id) {
