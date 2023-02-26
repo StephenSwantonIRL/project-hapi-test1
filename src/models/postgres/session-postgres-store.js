@@ -26,7 +26,7 @@ export const sessionPostgresStore = {
   async getSessionsByUser(userid) {
     if (userid) {
       const sessions = await sql` select * from sessions where userid = ${userid}`
-      return sessions[0] ? sessions[0] : null;
+      return sessions;
     }
     return null;
   },

@@ -62,6 +62,13 @@ export const backEndService = {
     return res.data;
   },
 
+
+  async getSessionByUser(id) {
+    const res = await axios.post(`${this.backEndUrl}/api/sessions/find`);
+    return res.data;
+  },
+
+
   async deleteSessionById(id) {
     console.log(id)
     const res = await axios.delete(`${this.backEndUrl}/api/sessions/${id}`);

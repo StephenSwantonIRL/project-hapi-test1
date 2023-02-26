@@ -18,10 +18,10 @@ export const sessionApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const sessions = await db.sessionStore.getSessionsByUser(request.params.id);
+        const sessions = await db.sessionStore.getSessionsByUser(request.payload.userid);
         return sessions;
       } catch (err) {
-        return Boom.serverUnavailable("Database Error");
+        return Boom.serverUnavailable(err);
       }
     },
   },
