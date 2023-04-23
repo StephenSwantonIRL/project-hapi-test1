@@ -1,5 +1,6 @@
 import { userApi } from "../api/user-api.js"
 import { sessionApi } from "../api/session-api.js"
+import { questionApi } from "../api/question-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -24,5 +25,12 @@ export const apiRoutes = [
   { method: "GET", path: "/api/sessions/{id}", config: sessionApi.findOne },
   { method: "POST", path: "/api/sessions/find", config: sessionApi.findByUser },
   { method: "DELETE", path: "/api/sessions/{id}", config: sessionApi.deleteOne },
+
+  { method: "GET", path: "/api/questions", config: questionApi.find },
+  { method: "POST", path: "/api/questions", config: questionApi.create },
+  { method: "DELETE", path: "/api/questions", config: questionApi.deleteAll },
+  { method: "GET", path: "/api/questions/{id}", config: questionApi.findOne },
+  { method: "POST", path: "/api/questions/find", config: questionApi.findBySession }, //
+  { method: "DELETE", path: "/api/sessions/{sessionId}/{id}", config: questionApi.deleteOne },
 
 ];

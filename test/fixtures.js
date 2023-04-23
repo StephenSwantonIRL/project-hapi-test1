@@ -62,3 +62,19 @@ export const planetSession = {
   qaenabled: false,
   title: "Learn about Planets",
 }
+export const planetSessionStubForQuestion = {
+  type: "quiz",
+  status: "inactive",
+  shortcode: "123a",
+  chatenabled: false,
+  qaenabled: false,
+  title: "Learn about Planets",
+}
+
+export const questionCore = {
+  type: "open",
+  question: "Why is the sky blue?",
+  image: "https://image.com",
+  sessionorder: 0,
+  timetoanswer: 120,
+}

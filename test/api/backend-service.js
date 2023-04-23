@@ -75,4 +75,33 @@ export const backEndService = {
     return res.data;
   },
 
+
+  async getAllQuestions() {
+    const res = await axios.get(`${this.backEndUrl}/api/questions`);
+    return res.data;
+  },
+
+  async createQuestion(question) {
+    const res = await axios.post(`${this.backEndUrl}/api/questions`, question);
+    return res.data;
+  },
+
+  async getQuestionById(id) {
+    const res = await axios.get(`${this.backEndUrl}/api/questions/${id}`);
+    return res.data;
+  },
+
+
+  async getQuestionBySession(id) {
+    const res = await axios.post(`${this.backEndUrl}/api/questions/find`, id);
+    return res.data;
+  },
+
+
+  async deleteQuestionById(sessionId, questionId) {
+    const res = await axios.delete(`${this.backEndUrl}/api/sessions/${sessionId}/${questionId}`);
+    return res.data;
+  },
+
+
 };
