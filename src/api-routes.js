@@ -2,6 +2,7 @@ import { userApi } from "../api/user-api.js"
 import { sessionApi } from "../api/session-api.js"
 import { questionApi } from "../api/question-api.js";
 import {mcqApi} from "../api/mcq-api.js";
+import {openApi} from "../api/open-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -38,4 +39,9 @@ export const apiRoutes = [
 
   { method: "POST", path: "/api/questions/mcq", config: mcqApi.create },
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/mcq", config: mcqApi.deleteOne },
+  { method: "GET", path: "/api/questions/mcq/{id}", config: mcqApi.findOne },
+
+  { method: "POST", path: "/api/questions/open-ended", config: openApi.create },
+  { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/open-ended", config: openApi.deleteOne },
+  { method: "GET", path: "/api/questions/open-ended/{id}", config: openApi.findOne }
 ];
