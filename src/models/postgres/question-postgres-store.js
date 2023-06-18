@@ -46,7 +46,7 @@ export const questionPostgresStore = {
 
   async updateQuestion(questionId, updatedQuestion) {
 
-    await  sql`update questions set ${sql(updatedQuestion)} where questionid = ${quesionId} `
+    await  sql`update questions set ${sql(updatedQuestion)} where questionid = ${questionId} `
     const confirmUpdate = await this.getQuestionById(questionId)
     return confirmUpdate
 

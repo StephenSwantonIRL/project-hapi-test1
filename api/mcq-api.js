@@ -1,36 +1,14 @@
 import Boom from "@hapi/boom";
 import { db } from "../src/models/db.js";
 import { imageStore } from "../src/models/image-store.js"
-export const questionApi = {
-  find: {
-    auth: false,
-    handler: async function (request, h) {
-      try {
-        const questions = await db.questionStore.getAllQuestions();
-        return questions;
-      } catch (err) {
-        return Boom.serverUnavailable(`Database Error ${err}`);
-      }
-    },
-  },
 
-  findBySession: {
-    auth: false,
-    handler: async function (request, h) {
-      try {
-        const questions = await db.questionStore.getQuestionsBySession(request.payload.userid);
-        return questions;
-      } catch (err) {
-        return Boom.serverUnavailable(err);
-      }
-    },
-  },
+export const mcqApi = {
 
   findOne: {
     auth: false,
     handler: async function (request, h) {
       try {
-        const question = await db.questionStore.getQuestionById(request.params.id);
+        const question = await db.mcqStore.getOptionsById(request.payload.questionid);
         if (!question) {
           return Boom.notFound("No Question with this id");
         }
@@ -47,7 +25,7 @@ export const questionApi = {
     handler: async function (request, h) {
       try {
         const questionDetails = request.payload;
-        const question = await db.questionStore.addQuestion(questionDetails)
+        const question = await db.mcqStore.addMCQElements(questionDetails)
         console.log(question)
         return h.response(question).code(201);
       } catch (err) {
@@ -78,26 +56,6 @@ export const questionApi = {
       } catch (err) {
         return Boom.serverUnavailable(`Database Error ${err}`);
       }
-    },
-  },
-
-  uploadImage: {
-    handler: async function (request, h) {
-      try {
-        const file = request.payload.imagefile;
-        if (Object.keys(file).length > 0) {
-          const url = await imageStore.uploadImage(request.payload.imagefile);
-          return { url: url };
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    payload: {
-      multipart: true,
-      output: "data",
-      maxBytes: 209715200,
-      parse: true,
     },
   },
 
