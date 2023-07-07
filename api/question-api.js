@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { db } from "../src/models/db.js";
 import { imageStore } from "../src/models/image-store.js"
+
 export const questionApi = {
   find: {
     auth: false,
@@ -18,7 +19,7 @@ export const questionApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const questions = await db.questionStore.getQuestionsBySession(request.payload.userid);
+        const questions = await db.questionStore.getQuestionsBySession(request.payload.sessionid);
         return questions;
       } catch (err) {
         return Boom.serverUnavailable(err);
@@ -49,6 +50,19 @@ export const questionApi = {
         const questionDetails = request.payload;
         const question = await db.questionStore.addQuestion(questionDetails)
         console.log(question)
+        return h.response(question).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
+
+  updateOne: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const questionDetails = request.payload;
+        const question = await db.questionStore.editQuestion(questionDetails)
         return h.response(question).code(201);
       } catch (err) {
         return Boom.serverUnavailable(err);

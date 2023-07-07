@@ -33,6 +33,7 @@ export const apiRoutes = [
 
   { method: "DELETE", path: "/api/questions", config: questionApi.deleteAll },
   { method: "GET", path: "/api/questions/{id}", config: questionApi.findOne },
+  { method: "POST", path: "/api/questions/{id}/edit", config: questionApi.updateOne },
   { method: "POST", path: "/api/questions/find", config: questionApi.findBySession }, //
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}", config: questionApi.deleteOne },
   { method: "POST", path: "/api/question/uploadimage", config: questionApi.uploadImage },
@@ -40,6 +41,7 @@ export const apiRoutes = [
   { method: "POST", path: "/api/questions/mcq", config: mcqApi.create },
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/mcq", config: mcqApi.deleteOne },
   { method: "GET", path: "/api/questions/mcq/{id}", config: mcqApi.findOne },
+  { method: "POST", path: "/api/questions/mcq/{id}/edit", config: mcqApi.updateOne },
 
   { method: "POST", path: "/api/questions/open-ended", config: openApi.create },
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/open-ended", config: openApi.deleteOne },

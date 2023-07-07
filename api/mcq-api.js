@@ -8,7 +8,7 @@ export const mcqApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const question = await db.mcqStore.getOptionsById(request.payload.questionid);
+        const question = await db.mcqStore.getOptionsById(request.params.id);
         if (!question) {
           return Boom.notFound("No Question with this id");
         }
@@ -26,6 +26,20 @@ export const mcqApi = {
       try {
         const questionDetails = request.payload;
         const question = await db.mcqStore.addMCQElements(questionDetails)
+        console.log(question)
+        return h.response(question).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
+
+  updateOne: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const questionDetails = request.payload;
+        const question = await db.mcqStore.editMCQElements(questionDetails)
         console.log(question)
         return h.response(question).code(201);
       } catch (err) {

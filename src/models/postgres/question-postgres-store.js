@@ -23,6 +23,14 @@ export const questionPostgresStore = {
     return confirmAdded
   },
 
+  async editQuestion(question) {
+    const outcome = await sql`update questions set ${sql(question)} where questionid = ${question.questionid}`
+    console.log(outcome)
+    const confirmAdded = await this.getQuestionById(question.questionid)
+    return confirmAdded
+  },
+
+
   async getQuestionsBySession(sessionid) {
     if (sessionid) {
       const questions = await sql` select * from questions where sessionid = ${sessionid}`

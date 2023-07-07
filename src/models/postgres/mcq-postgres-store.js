@@ -17,6 +17,13 @@ export const mcqPostgresStore = {
   },
 
 
+  async editMCQElements(mcqElements) {
+    const outcome = await sql`update mcq set ${sql(mcqElements)} where questionid = ${mcqElements.questionid}`
+    const confirmAdded = await this.getOptionsById(mcqElements.questionid)
+    return confirmAdded
+  },
+
+
   async deleteMCQById(id) {
     try {
       await sql`delete from mcq where questionid = ${id} returning *`
