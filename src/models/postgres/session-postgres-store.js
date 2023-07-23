@@ -52,4 +52,13 @@ export const sessionPostgresStore = {
 
   },
 
+  async addShortCodeById(shortcode, sessionId) {
+
+    await  sql`update sessions set shortcode = ${shortcode} where sessionid = ${sessionId} `
+    const confirmUpdate = await this.getSessionById(sessionId)
+    return confirmUpdate
+
+  },
+
+
 };

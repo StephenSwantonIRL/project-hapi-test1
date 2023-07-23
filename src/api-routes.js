@@ -47,4 +47,6 @@ export const apiRoutes = [
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/open-ended", config: openApi.deleteOne },
   { method: "GET", path: "/api/questions/open-ended/{id}", config: openApi.findOne },
   { method: "POST", path: "/api/questions/open-ended/{id}/edit", config: openApi.updateOne },
+
+  { method: "POST", path: "/api/sessions/{sessionId}/shortcode/assign", config: sessionApi.assignShortCode },
 ];

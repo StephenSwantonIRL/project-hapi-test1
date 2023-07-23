@@ -48,7 +48,6 @@ export const sessionApi = {
       try {
         const sessionDetails = request.payload;
         const session = await db.sessionStore.addSession(sessionDetails)
-        console.log(session)
         return h.response(session).code(201);
       } catch (err) {
         return Boom.serverUnavailable(err);
@@ -80,5 +79,21 @@ export const sessionApi = {
       }
     },
   },
+
+  assignShortCode: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const {sessionId} = request.params;
+        const {shortCode} = request.payload;
+        const session = await db.sessionStore.addShortCodeById(shortCode, sessionId)
+        return h.response(session).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
+
+
 
 };
