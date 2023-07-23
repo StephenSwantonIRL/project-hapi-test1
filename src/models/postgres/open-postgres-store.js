@@ -16,6 +16,12 @@ export const openPostgresStore = {
     return confirmAdded
   },
 
+  async editOpenEndedElements(openEndedElements) {
+    const outcome = await sql`update open_ended set ${sql(openEndedElements)} where questionid = ${openEndedElements.questionid}`
+    const confirmAdded = await this.getOptionsById(openEndedElements.questionid)
+    return confirmAdded
+  },
+
 
   async deleteOpenEndedById(id) {
     try {
@@ -29,12 +35,5 @@ export const openPostgresStore = {
     await sql`delete from open_ended`
   },
 
-  async updateOpenEnded(questionId, updatedOpenEndedElements) {
-
-    await  sql`update open_ended set ${sql(updatedOpenEndedElements)} where questionid = ${questionId} `
-    const confirmUpdate = await this.getOptionsById(questionId)
-    return confirmUpdate
-
-  },
 
 };

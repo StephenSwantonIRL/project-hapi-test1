@@ -7,7 +7,8 @@ export const openApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const question = await db.openStore.getOptionsById(request.payload.questionid);
+        console.log(request.params)
+        const question = await db.openStore.getOptionsById(request.params.id);
         if (!question) {
           return Boom.notFound("No Question with this id");
         }
@@ -17,6 +18,23 @@ export const openApi = {
       }
     },
   },
+
+  updateOne: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const questionDetails = request.payload;
+        console.log(questionDetails)
+        const question = await db.openStore.editOpenEndedElements(questionDetails)
+        console.log(question)
+        return h.response(question).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
+
+
 
 
   create: {

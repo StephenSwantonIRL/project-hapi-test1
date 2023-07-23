@@ -45,5 +45,6 @@ export const apiRoutes = [
 
   { method: "POST", path: "/api/questions/open-ended", config: openApi.create },
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/open-ended", config: openApi.deleteOne },
-  { method: "GET", path: "/api/questions/open-ended/{id}", config: openApi.findOne }
+  { method: "GET", path: "/api/questions/open-ended/{id}", config: openApi.findOne },
+  { method: "POST", path: "/api/questions/open-ended/{id}/edit", config: openApi.updateOne },
 ];
