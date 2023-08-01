@@ -60,5 +60,13 @@ export const sessionPostgresStore = {
 
   },
 
+  async addWaitMessageById(waitMessage, sessionId) {
+
+    await  sql`update sessions set waitmessage = ${waitMessage} where sessionid = ${sessionId} `
+    const confirmUpdate = await this.getSessionById(sessionId)
+    return confirmUpdate
+
+  },
+
 
 };

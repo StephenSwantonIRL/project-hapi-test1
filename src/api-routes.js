@@ -49,4 +49,5 @@ export const apiRoutes = [
   { method: "POST", path: "/api/questions/open-ended/{id}/edit", config: openApi.updateOne },
 
   { method: "POST", path: "/api/sessions/{sessionId}/shortcode/assign", config: sessionApi.assignShortCode },
+  { method: "POST", path: "/api/sessions/{sessionId}/wait-message/assign", config: sessionApi.assignWaitMessage },
 ];
