@@ -68,5 +68,13 @@ export const sessionPostgresStore = {
 
   },
 
+  async changeStatusById(status, sessionId) {
+
+    await  sql`update sessions set status = ${status} where sessionid = ${sessionId} `
+    const confirmUpdate = await this.getSessionById(sessionId)
+    return confirmUpdate
+
+  },
+
 
 };

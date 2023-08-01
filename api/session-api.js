@@ -109,6 +109,20 @@ export const sessionApi = {
     },
   },
 
+  assignStatus: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const {sessionId} = request.params;
+        console.log(request.payload)
+        const {status} = request.payload;
+        const session = await db.sessionStore.changeStatusById(status, sessionId)
+        return h.response(session).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
 
 
 };

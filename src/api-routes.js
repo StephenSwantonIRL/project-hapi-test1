@@ -50,4 +50,5 @@ export const apiRoutes = [
 
   { method: "POST", path: "/api/sessions/{sessionId}/shortcode/assign", config: sessionApi.assignShortCode },
   { method: "POST", path: "/api/sessions/{sessionId}/wait-message/assign", config: sessionApi.assignWaitMessage },
+  { method: "POST", path: "/api/sessions/{sessionId}/status/assign", config: sessionApi.assignStatus },
 ];
