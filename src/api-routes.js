@@ -3,6 +3,7 @@ import { sessionApi } from "../api/session-api.js"
 import { questionApi } from "../api/question-api.js";
 import {mcqApi} from "../api/mcq-api.js";
 import {openApi} from "../api/open-api.js";
+import {anonUserApi} from "../api/anon-user-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -20,6 +21,8 @@ export const apiRoutes = [
   { method: ["GET", "POST","DELETE"], path: "/api/checkToken", config: userApi.checkToken },
   { method: ["GET", "POST"], path: "/google", config: userApi.googleAuth },
   { method: ["GET", "POST"], path: "/auth", config: userApi.officeAuth },
+
+  { method: "POST", path: "/api/anon", config: anonUserApi.create },
 
   { method: "GET", path: "/api/sessions", config: sessionApi.find },
   { method: "POST", path: "/api/sessions", config: sessionApi.create },
