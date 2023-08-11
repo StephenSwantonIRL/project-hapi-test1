@@ -71,10 +71,23 @@ export const sessionPostgresStore = {
   async changeStatusById(status, sessionId) {
 
     await  sql`update sessions set status = ${status} where sessionid = ${sessionId} `
+    if(status === "inactive"){
+      await  sql`update sessions set activequestion = NULL where sessionid = ${sessionId} `
+      await  sql`update sessions set activequestionstarttime = NULL where sessionid = ${sessionId} `
+    }
+
     const confirmUpdate = await this.getSessionById(sessionId)
     return confirmUpdate
 
   },
 
+  async setActiveQuestion(questionid, sessionId) {
+
+    await  sql`update sessions set activequestion = ${questionid} where sessionid = ${sessionId} `
+    await  sql`update sessions set activequestionstarttime = NOW() where sessionid = ${sessionId} `
+    const confirmUpdate = await this.getSessionById(sessionId)
+    return confirmUpdate
+
+  },
 
 };

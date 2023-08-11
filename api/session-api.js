@@ -123,5 +123,18 @@ export const sessionApi = {
     },
   },
 
+  setActiveQuestion: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const {sessionId} = request.params;
+        const {questionid} = request.payload;
+        const session = await db.sessionStore.setActiveQuestion(questionid, sessionId)
+        return h.response(session).code(201);
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
 
 };
