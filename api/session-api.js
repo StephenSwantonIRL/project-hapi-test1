@@ -1,5 +1,5 @@
 import Boom from "@hapi/boom";
-import { db } from "../src/models/db.js";
+import {db} from "../src/models/db.js";
 
 export const sessionApi = {
   find: {
@@ -41,6 +41,17 @@ export const sessionApi = {
     },
   },
 
+  findByShortcode: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        const sessions = await db.sessionStore.getSessionByShortcode(request.payload.shortcode);
+        return sessions;
+      } catch (err) {
+        return Boom.serverUnavailable(err);
+      }
+    },
+  },
 
   create: {
     auth: false,
@@ -79,6 +90,19 @@ export const sessionApi = {
       }
     },
   },
+
+
+  findActiveQuestion: {
+    auth: false,
+    handler: async function (request, h) {
+      try {
+        return await db.sessionStore.getActiveQuestion(request.params.id,);
+      } catch (err) {
+        return Boom.serverUnavailable("Database Error");
+      }
+    },
+  },
+
 
   assignShortCode: {
     auth: false,

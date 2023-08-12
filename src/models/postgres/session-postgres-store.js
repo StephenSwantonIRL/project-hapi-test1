@@ -16,6 +16,16 @@ export const sessionPostgresStore = {
     return null;
   },
 
+  async getSessionByShortcode(id) {
+    if (id) {
+      const session = await sql` select * from sessions where shortcode = ${id}`
+      return session[0];
+    }
+    return null;
+  },
+
+
+
   async addSession(session) {
     session.sessionid = uuid.v1();
     const outcome = await sql`insert into sessions ${sql(session)}`
@@ -89,5 +99,17 @@ export const sessionPostgresStore = {
     return confirmUpdate
 
   },
+
+  async getActiveQuestion(id) {
+    if (id) {
+      const session = await sql` select * from sessions where sessionid = ${id}`
+      return {
+        activequestion: session[0].activequestion,
+        activequestionstarttime: session[0].activequestionstarttime,
+      };
+    }
+    return null;
+  },
+
 
 };

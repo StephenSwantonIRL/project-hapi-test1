@@ -29,6 +29,8 @@ export const apiRoutes = [
   { method: "DELETE", path: "/api/sessions", config: sessionApi.deleteAll },
   { method: "GET", path: "/api/sessions/{id}", config: sessionApi.findOne },
   { method: "POST", path: "/api/sessions/find", config: sessionApi.findByUser },
+  { method: "POST", path: "/api/sessions/find/shortcode", config: sessionApi.findByShortcode },
+  { method: "GET", path: "/api/sessions/find/active-question/{id}", config: sessionApi.findActiveQuestion },
   { method: "DELETE", path: "/api/sessions/{id}", config: sessionApi.deleteOne },
 
   { method: "GET", path: "/api/questions", config: questionApi.find },
