@@ -96,7 +96,21 @@ export const sessionApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        return await db.sessionStore.getActiveQuestion(request.params.id,);
+        const activeQuestion = await db.sessionStore.getActiveQuestion(request.params.id,);
+        console.log(activeQuestion.activequestion)
+        const questionDetails = await db.questionStore.getQuestionById(activeQuestion.activequestion);
+        console.log(questionDetails)
+        activeQuestion.question = questionDetails.question
+        activeQuestion.image = questionDetails.image
+        activeQuestion.timetoanswer = questionDetails.timetoanswer
+        console.log(activeQuestion)
+        if(questionDetails.type === "open"){
+          activeQuestion.options = await db.openStore.getOptionsById(activeQuestion.activequestion);
+        }
+        if(questionDetails.type === "mcq"){
+          activeQuestion.options = await db.mcqStore.getOptionsById(activeQuestion.activequestion);
+        }
+        return activeQuestion
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
