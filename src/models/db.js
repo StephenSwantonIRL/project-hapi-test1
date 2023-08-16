@@ -5,6 +5,7 @@ import { mcqPostgresStore } from "./postgres/mcq-postgres-store.js";
 import { openPostgresStore } from "./postgres/open-postgres-store.js";
 import { anonUserPostgresStore } from "./postgres/anon-user-postgres-store.js";
 import { responsePostgresStore } from "./postgres/response-postgres-store.js";
+import { mcqResponsePostgresStore} from "./postgres/mcq-response-postgres-store.js";
 
 
 export const db = {
@@ -14,6 +15,7 @@ export const db = {
   mcqStore: null,
   openStore: null,
   responseStore: null,
+  mcqResponseStore: null,
 
   init(storeType) {
     switch (storeType) {
@@ -25,6 +27,7 @@ export const db = {
         this.mcqStore = mcqPostgresStore;
         this.openStore = openPostgresStore;
         this.responseStore = responsePostgresStore;
+        this.mcqResponseStore = mcqResponsePostgresStore;
         break;
       default :
         this.userStore = userPostgresStore;
@@ -34,6 +37,7 @@ export const db = {
         this.mcqStore = mcqPostgresStore;
         this.openStore = openPostgresStore;
         this.responseStore = responsePostgresStore;
+        this.mcqResponseStore = mcqResponsePostgresStore;
     }
   }
 };

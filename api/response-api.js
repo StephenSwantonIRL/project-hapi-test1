@@ -1,6 +1,5 @@
 import Boom from "@hapi/boom";
 import { db } from "../src/models/db.js";
-import { imageStore } from "../src/models/image-store.js"
 
 export const responseApi = {
   findByQuestion: {
@@ -36,12 +35,14 @@ export const responseApi = {
     handler: async function (request, h) {
       try {
         const responseDetails = request.payload;
-        console.log(responseDetails)
+        const responseValue = request.payload.value
         if(responseDetails.value){
           delete responseDetails.value
         }
-        console.log(responseDetails)
         const response = await db.responseStore.addResponse(responseDetails)
+        if(responseValue){
+          await db.mcqResponseStore.addValue({value: responseValue, responseid: response.responseid})
+        }
         return h.response(response).code(201);
       } catch (err) {
         return Boom.serverUnavailable(err);
