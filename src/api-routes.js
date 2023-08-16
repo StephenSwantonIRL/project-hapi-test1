@@ -4,6 +4,7 @@ import { questionApi } from "../api/question-api.js";
 import {mcqApi} from "../api/mcq-api.js";
 import {openApi} from "../api/open-api.js";
 import {anonUserApi} from "../api/anon-user-api.js";
+import {responseApi} from "../api/response-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -42,6 +43,12 @@ export const apiRoutes = [
   { method: "POST", path: "/api/questions/find", config: questionApi.findBySession }, //
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}", config: questionApi.deleteOne },
   { method: "POST", path: "/api/question/uploadimage", config: questionApi.uploadImage },
+
+  { method: "POST", path: "/api/responses", config: responseApi.create },
+  { method: "DELETE", path: "/api/responses", config: responseApi.deleteAll },
+  { method: "GET", path: "/api/responses/{id}", config: responseApi.findOne },
+  { method: "POST", path: "/api/responses/find", config: responseApi.findByQuestion }, //
+  { method: "DELETE", path: "/api/responses/{questionid}", config: responseApi.deleteResponsesByQuestion },
 
   { method: "POST", path: "/api/questions/mcq", config: mcqApi.create },
   { method: "DELETE", path: "/api/sessions/{sessionId}/{id}/mcq", config: mcqApi.deleteOne },

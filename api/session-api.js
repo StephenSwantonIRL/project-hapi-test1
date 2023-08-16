@@ -97,18 +97,17 @@ export const sessionApi = {
     handler: async function (request, h) {
       try {
         const activeQuestion = await db.sessionStore.getActiveQuestion(request.params.id,);
-        console.log(activeQuestion.activequestion)
         const questionDetails = await db.questionStore.getQuestionById(activeQuestion.activequestion);
-        console.log(questionDetails)
         activeQuestion.question = questionDetails.question
         activeQuestion.image = questionDetails.image
         activeQuestion.timetoanswer = questionDetails.timetoanswer
-        console.log(activeQuestion)
+        activeQuestion.type = questionDetails.type
         if(questionDetails.type === "open"){
           activeQuestion.options = await db.openStore.getOptionsById(activeQuestion.activequestion);
         }
         if(questionDetails.type === "mcq"){
           activeQuestion.options = await db.mcqStore.getOptionsById(activeQuestion.activequestion);
+          delete activeQuestion.options.correctanswer;
         }
         return activeQuestion
       } catch (err) {
