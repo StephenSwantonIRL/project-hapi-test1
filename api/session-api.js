@@ -97,21 +97,23 @@ export const sessionApi = {
     handler: async function (request, h) {
       try {
         const activeQuestion = await db.sessionStore.getActiveQuestion(request.params.id,);
-        const questionDetails = await db.questionStore.getQuestionById(activeQuestion.activequestion);
-        activeQuestion.question = questionDetails.question
-        activeQuestion.image = questionDetails.image
-        activeQuestion.timetoanswer = questionDetails.timetoanswer
-        activeQuestion.type = questionDetails.type
-        if(questionDetails.type === "open"){
-          activeQuestion.options = await db.openStore.getOptionsById(activeQuestion.activequestion);
-        }
-        if(questionDetails.type === "mcq"){
-          activeQuestion.options = await db.mcqStore.getOptionsById(activeQuestion.activequestion);
-          delete activeQuestion.options.correctanswer;
+        if(activeQuestion.activequestion != null){
+          const questionDetails = await db.questionStore.getQuestionById(activeQuestion.activequestion);
+          activeQuestion.question = questionDetails.question
+          activeQuestion.image = questionDetails.image
+          activeQuestion.timetoanswer = questionDetails.timetoanswer
+          activeQuestion.type = questionDetails.type
+          if(questionDetails.type === "open"){
+            activeQuestion.options = await db.openStore.getOptionsById(activeQuestion.activequestion);
+          }
+          if(questionDetails.type === "mcq"){
+            activeQuestion.options = await db.mcqStore.getOptionsById(activeQuestion.activequestion);
+            delete activeQuestion.options.correctanswer;
+          }
         }
         return activeQuestion
       } catch (err) {
-        return Boom.serverUnavailable("Database Error");
+        return Boom.serverUnavailable(`Database Error ${err}`);
       }
     },
   },
