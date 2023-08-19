@@ -1,13 +1,20 @@
-export const hello = function () {
-    this.emit('Hi back at you');
-};
 
-export const newMessage = function (newMessage) {
+export const listeners = {
+    socketObject: null,
+    setSockets: function (socket) {
+        this.socketObject = socket
+    },
 
-    console.log("Got message", newMessage);
-};
+    hello: function () {
+        this.broadcast.emit("Hi back at you");
+    },
 
-export const goodbye = function () {
+    responseSubmitted : function (sessionId) {
+    this.broadcast.emit(sessionId.toString())
+},
+    session : function () {
+        this.broadcast.emit("Session received")
+        console.log("session received")
+    }
 
-    this.emit("Take it easy, pal");
-};
+}

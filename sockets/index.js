@@ -1,5 +1,5 @@
 import {Server as SocketServer} from "socket.io"
-import * as Handlers from "./handlers.js";
+import {listeners as socketListeners} from "./handlers.js";
 
 
 export const register = {
@@ -14,15 +14,12 @@ export const register = {
         });
 
         io.on("connection", function (socket) {
-
+            socketListeners.setSockets(socket)
             console.log("New connection!");
-            socket.on('hello', Handlers.hello);
-/*          Example usage
-
-            socket.on('newMessage', Handlers.newMessage);
-            socket.on('goodbye', Handlers.goodbye); */
+            socket.on("hello", socketListeners.hello);
+            socket.on("response submitted", socketListeners.responseSubmitted)
+            socket.on("f1c689b0-3088-11ee-bd35-eb147155334f", socketListeners.session)
         });
-
 
     },
     name: "socket-server"
