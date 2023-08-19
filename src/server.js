@@ -51,7 +51,7 @@ async function init() {
     host: "localhost",
     routes:  {
       cors: {
-        origin: ["http://localhost:3001"],
+        origin: ["http://localhost:3001","http://localhost:3000" ],
         headers: ["Authorization", "Access-Control-Allow-Headers"],
         exposedHeaders: ["Accept", "Access-Control-Allow-Headers"],
         additionalExposedHeaders: ["Accept"],
