@@ -20,9 +20,7 @@ export const anonUserApi = {
   },
 
   findOne: {
-    auth: {
-      strategy: "jwt",
-    },
+    auth: false,
     handler: async function (request, h) {
       try {
         const user = await db.anonUserStore.getUserById(request.params.id);

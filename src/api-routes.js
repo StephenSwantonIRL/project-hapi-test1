@@ -24,6 +24,7 @@ export const apiRoutes = [
   { method: ["GET", "POST"], path: "/auth", config: userApi.officeAuth },
 
   { method: "POST", path: "/api/anon", config: anonUserApi.create },
+  { method: "GET", path: "/api/anon/{id}", config: anonUserApi.findOne },
 
   { method: "GET", path: "/api/sessions", config: sessionApi.find },
   { method: "POST", path: "/api/sessions", config: sessionApi.create },

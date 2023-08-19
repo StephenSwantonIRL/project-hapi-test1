@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
 import { apiRoutes } from "./api-routes.js"
 import { db } from "./models/db.js";
 import HapiSwagger from "hapi-swagger";
+import * as Sockets from "../sockets/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +45,25 @@ async function init() {
     routes: { cors: true }
   });
 
+
+  const socketServer = Hapi.server({
+    port: 4001,
+    host: "localhost",
+    routes:  {
+      cors: {
+        origin: ["http://localhost:3001"],
+        headers: ["Authorization", "Access-Control-Allow-Headers"],
+        exposedHeaders: ["Accept", "Access-Control-Allow-Headers"],
+        additionalExposedHeaders: ["Accept"],
+        maxAge: 60,
+        credentials: false
+      }
+    }
+  });
+
+  await socketServer.register(Sockets.register)
+  await socketServer.start();
+
   await server.register(Vision);
   await server.register(Cookie);
   await server.register(Inert);
@@ -74,9 +94,9 @@ async function init() {
     isSecure: false
   };
   server.auth.strategy("google-oauth", "bell", bellAuthOptions);
-  
-  
-  
+
+
+
   const officeAuthOptions = {
     provider: "azure",
     password: process.env.cookie_password,
@@ -93,8 +113,8 @@ async function init() {
         scope: ["openid", "offline_access", "user.read"]
   };
   server.auth.strategy("office-oauth", "bell", officeAuthOptions);
-  
-  
+
+
 
   server.auth.default("jwt");
 
