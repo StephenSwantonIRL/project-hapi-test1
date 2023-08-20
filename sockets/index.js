@@ -16,9 +16,8 @@ export const register = {
         io.on("connection", function (socket) {
             socketListeners.setSockets(socket)
             console.log("New connection!");
-            socket.on("hello", socketListeners.hello);
             socket.on("response submitted", socketListeners.responseSubmitted)
-            socket.on("f1c689b0-3088-11ee-bd35-eb147155334f", socketListeners.session)
+            socket.on("active question", socketListeners.activeQuestion)
         });
 
     },

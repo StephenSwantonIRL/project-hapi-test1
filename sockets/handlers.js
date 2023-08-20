@@ -5,16 +5,12 @@ export const listeners = {
         this.socketObject = socket
     },
 
-    hello: function () {
-        this.broadcast.emit("Hi back at you");
-    },
 
     responseSubmitted : function (sessionId) {
-    this.broadcast.emit(sessionId.toString())
+        this.broadcast.emit((`${sessionId.toString()}-response`))
 },
-    session : function () {
-        this.broadcast.emit("Session received")
-        console.log("session received")
+    activeQuestion : function (sessionId) {
+        this.broadcast.emit((`${sessionId.toString()}-question`))
     }
 
 }
