@@ -1,5 +1,7 @@
 import * as uuid from "uuid"
 import { sql } from "./connect.js"
+import {db} from "../db.js";
+import _ from "lodash";
 
 
 export const mcqResponsePostgresStore = {
@@ -15,11 +17,23 @@ export const mcqResponsePostgresStore = {
   async getValuesByResponse(responseid) {
     if (responseid) {
       const values = await sql` select * from responsevalues where responseid = ${responseid}`
-      return responses;
+      return values;
     }
     return null;
   },
 
+
+  async addValuesToResponses(responses){
+    const finalResponses = []
+    for (let i = 0; i < responses.length; i += 1) {
+      await db.mcqResponseStore.getValuesByResponse(responses[i].responseid).then((x) => {
+        responses[i].values = x
+        finalResponses.push(responses[i])
+      })
+    }
+    responses =_.clone(finalResponses)
+    return responses
+  },
 
   async getValueById(valueid) {
     if (valueid) {

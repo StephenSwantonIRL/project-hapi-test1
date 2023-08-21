@@ -17,7 +17,7 @@ export const anonUserPostgresStore = {
   },
 
   async addUser(user) {
-      user.userid = uuid.v1();
+      user.userid = `a-${uuid.v1()}`;
       const outcome = await sql`insert into anon_users ${sql(user)}`
       const confirmAdded = await this.getUserById(user.userid)
       return confirmAdded

@@ -28,7 +28,7 @@ export const userPostgresStore = {
       user.organisation = "";
       user.role = ""
       user.profilephoto = "";
-      user.userid = uuid.v1();
+      user.userid = `u-${uuid.v1()}`;
 
       const outcome = await sql`insert into Users ${sql(user)}`
       const confirmAdded = await this.getUserById(user.userid)
