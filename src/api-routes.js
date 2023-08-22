@@ -5,6 +5,7 @@ import {mcqApi} from "../api/mcq-api.js";
 import {openApi} from "../api/open-api.js";
 import {anonUserApi} from "../api/anon-user-api.js";
 import {responseApi} from "../api/response-api.js";
+import {wordCloudApi} from "../api/wordcloud-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -65,4 +66,6 @@ export const apiRoutes = [
   { method: "POST", path: "/api/sessions/{sessionId}/wait-message/assign", config: sessionApi.assignWaitMessage },
   { method: "POST", path: "/api/sessions/{sessionId}/status/assign", config: sessionApi.assignStatus },
   { method: "POST", path: "/api/sessions/{sessionId}/active/", config: sessionApi.setActiveQuestion },
+
+  { method: "POST", path: "/api/wordcloud", config: wordCloudApi.generateCloudData },
 ];
